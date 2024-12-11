@@ -37,23 +37,24 @@ def sortingByYear(df):
 
     # Split the DataFrame by year
     for year in years:
-        yearly_dfs[year] = df[df['Start_Date___Time'].dt.year == year]
+        yearly_dfs[year] = df[df['Start_Date___Time'].dt.year == year].copy()
         print(f"Data for {year} contains {len(yearly_dfs[year])} rows.")
         # Apply the conversion
         yearly_dfs[year]['Total Duration (minutes)'] = yearly_dfs[year]['Total_Duration__hh_mm_ss_'].apply(hhmmss_to_minutes)
         yearly_dfs[year]['Charging Time (minutes)'] = yearly_dfs[year]['Charging_Time__hh_mm_ss_'].apply(hhmmss_to_minutes)
+        yearly_dfs[year].reset_index(drop=True, inplace=True)
+
 
         # Save each year's DataFrame to a new CSV file (optional)
         # yearly_dfs[year]
-        ploting(yearly_dfs[year])
+        ploting(yearly_dfs[year],year)
+        # yearly_dfs[year].to_csv(f'data_{year}.csv', index=False)
 
 
-
-
-def ploting(df):
+def ploting(yearlyDf,year):
     plt.figure(figsize=(10, 8))
-    plt.plot(df.index, df['Total Duration (minutes)'], label='Total Duration (min)')
-    plt.plot(df.index, df['Charging Time (minutes)'], label='Charging Time (min)')
+    plt.plot(yearlyDf.index, yearlyDf['Total Duration (minutes)'], label='Total Duration (min)')
+    plt.plot(yearlyDf.index, yearlyDf['Charging Time (minutes)'], label='Charging Time (min)')
 
     # mean_y1 = np.mean(df['Total Duration (minutes)'])
     # plt.axhline(mean_y1, color='red', linestyle='--', label=f'Mean (y = {mean_y1:.2f})')
@@ -70,7 +71,7 @@ def ploting(df):
     # Adding labels, title, and legend
     plt.xlabel('Charging event')
     plt.ylabel('Time(min)')
-    plt.title('Comparison of Connection time and Charging time in 2020')
+    plt.title('Comparison of Connection time and Charging time in '+ str(year))
     plt.legend()
     plt.grid(True)
     # Show the plot
