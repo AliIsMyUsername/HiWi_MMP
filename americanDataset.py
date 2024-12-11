@@ -7,6 +7,8 @@ import seaborn as sns
 from matplotlib.ticker import FuncFormatter
 from scipy.stats import linregress
 
+# originally for 'ChargePoint Data CY20Q4'
+
 # directory_path = r'E:\HiWi\Datasets'
 # print(os.listdir(directory_path))
 # excel_file_name = 'ElectricVehicleChargingStationUsageJuly2011Dec2020_2797601732187952259'
