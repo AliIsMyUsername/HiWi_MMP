@@ -18,8 +18,64 @@ def chopping(df): #removes unnecessery data
     df = df.drop(columns=columns_to_drop, axis=1)
     # output_file = 'ChargePoint Data CY20Q4_edited.csv'
     # df.to_csv(output_file, index=False)
-    print(df)
+    # print(df)
     return df
 
-chopping(df)
-print(df)
+def hhmmss_to_minutes(hhmmss): #changes the format of time into minutes only
+    h, m, s = map(int, hhmmss.split(':'))
+    return h * 60 + m + s / 60
+
+def sortingByYear(df):
+    # # Ensure the date column is in datetime format
+    df['Start_Date___Time'] = pd.to_datetime(df['Start_Date___Time'])
+
+    # # Extract the years present in the dataset
+    years = df['Start_Date___Time'].dt.year.unique()
+    #
+    # Create a dictionary to store DataFrames for each year
+    yearly_dfs = {}
+
+    # Split the DataFrame by year
+    for year in years:
+        yearly_dfs[year] = df[df['Start_Date___Time'].dt.year == year]
+        print(f"Data for {year} contains {len(yearly_dfs[year])} rows.")
+        # Apply the conversion
+        yearly_dfs[year]['Total Duration (minutes)'] = yearly_dfs[year]['Total_Duration__hh_mm_ss_'].apply(hhmmss_to_minutes)
+        yearly_dfs[year]['Charging Time (minutes)'] = yearly_dfs[year]['Charging_Time__hh_mm_ss_'].apply(hhmmss_to_minutes)
+
+        # Save each year's DataFrame to a new CSV file (optional)
+        # yearly_dfs[year]
+        ploting(yearly_dfs[year])
+
+
+
+
+def ploting(df):
+    plt.figure(figsize=(10, 8))
+    plt.plot(df.index, df['Total Duration (minutes)'], label='Total Duration (min)')
+    plt.plot(df.index, df['Charging Time (minutes)'], label='Charging Time (min)')
+
+    # mean_y1 = np.mean(df['Total Duration (minutes)'])
+    # plt.axhline(mean_y1, color='red', linestyle='--', label=f'Mean (y = {mean_y1:.2f})')
+
+    # mean_y2 = np.mean(df['Charging Time (minutes)'])
+    # plt.axhline(mean_y2, color='green', linestyle='--', label=f'Mean (y = {mean_y2:.2f})')
+
+    # slope, intercept, _, _, _ = linregress(df.index, df['Total Duration (minutes)'])
+    # trend_line = slope * df.index + intercept
+
+    # Plot trend line
+    # plt.plot(df.index, trend_line, color='green', label='Trend Line')
+
+    # Adding labels, title, and legend
+    plt.xlabel('Charging event')
+    plt.ylabel('Time(min)')
+    plt.title('Comparison of Connection time and Charging time in 2020')
+    plt.legend()
+    plt.grid(True)
+    # Show the plot
+    plt.show()
+
+choppedDf=chopping(df)
+sortingByYear(choppedDf)
+
