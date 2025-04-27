@@ -3,27 +3,35 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import traceback
 import pandas as pd
 from selenium.webdriver.chrome.options import Options
 
 # to make the browser invasible
-# options = Options()
-# options.add_argument("--headless")
-# driver = webdriver.Chrome(service=service, options=options)
-
-# Path to your ChromeDriver
-driver_path = "C:/Users/Abdulrahman Ali/Downloads/chromedriver-win64_131/chromedriver.exe"
-
-# Create a Service object
-service = Service(driver_path)
-
-# Initialize the browser with the Service object
 options = Options()
 options.add_argument("--headless")
-driver = webdriver.Chrome(service=service, options=options) #invasible web browser
+#using webdrivermamager there's no need to download and install chrome driver
+service = Service(ChromeDriverManager().install())
+# driver = webdriver.Chrome(service=service, options=options)#invasible
+driver = webdriver.Chrome(service=service)#vasible
+
+# Path to your ChromeDriver
+# driver_path = "C:/Users/Abdulrahman Ali/Downloads/chromedriver-win64_135/chromedriver.exe"
+
+# Create a Service object
+# service = Service(driver_path)
+
+# Initialize the browser with the Service object
+# options = Options()
+# options.add_argument("--headless")
+# driver = webdriver.Chrome(service=service, options=options) #invasible web browser
 # driver = webdriver.Chrome(service=service) #vasible web browser
+
+
+# driver = webdriver.Chrome(service=service)
+
 columns = ["Address","Availability","Charging rate","Power","Current type","connection type","Price"]
 outputDF = pd.DataFrame(columns=columns)
 
@@ -46,12 +54,16 @@ for i in range(x):
         # Wait up to 20 seconds for the charging station list to be visible
         WebDriverWait(driver, 20).until(
             EC.visibility_of_element_located(
-                (By.XPATH, '//div[@class="sc-gFqAkR sc-dAbbOL sc-iVDsrp dcOspJ kHQqqq joTtKM"]'))
+                (By.XPATH, '//div[@class="sc-gFqAkR sc-dAbbOL sc-CCtys dcOspJ kHQqqq gqVsaY"]'))#same xpath of the chargingstations, just waiting for it to appeare
         )
-
+        # buttonsLocation = driver.find_elements(By.XPATH,'//button[@class="sc-aXZVg ciuTTg link sc-fnLEGM jOGWNJ"]')  # a way to automatically get the user's location
+        # buttonsLocation[0].click()
+        # buttonsShare = driver.find_elements(By.XPATH,
+        #                                '//button[@class="sc-aXZVg ciuTTg primary"]')  # needed only for the first element in the loop
+        # buttonsShare[0].click()
         # Get all the charging stations
         allChargStation = driver.find_elements(By.XPATH,
-                                               '//div[@class="sc-gFqAkR sc-dAbbOL sc-iVDsrp dcOspJ kHQqqq joTtKM"]')
+                                               '//div[@class="sc-gFqAkR sc-dAbbOL sc-CCtys dcOspJ kHQqqq gqVsaY"]')#Same as the previous xpath
         size = len(allChargStation)
         print(f"Number of charging stations found: {size}")
         for station in allChargStation:
@@ -68,11 +80,11 @@ for i in range(x):
 
             address = driver.find_element(By.XPATH, '//div[@class="sc-gFqAkR sc-dAbbOL dcOspJ kHQqqq"]').text
             availability = driver.find_element(By.XPATH,
-                                               '//div[@class="sc-gFqAkR sc-fUnMCh sc-feNupb dcOspJ gxCHVP jTLVZJ"]').text
-            rate = driver.find_element(By.XPATH, '//div[@class="sc-dxUMQK gDdSqj"]').text
-            powerType = driver.find_element(By.XPATH, '//div[@class="sc-fPXMVe sc-eWHaVC gdLKmB gGanZx"]').text
+                                               '//div[@class="sc-gFqAkR sc-fUnMCh sc-dxUMQK dcOspJ gxCHVP ckHQeR"]').text
+            rate = driver.find_element(By.XPATH, '//div[@class="sc-elxqWl cUXcTO"]').text
+            powerType = driver.find_element(By.XPATH, '//div[@class="sc-fPXMVe sc-APcvf gdLKmB fPhTpt"]').text
             price = driver.find_elements(By.XPATH, '//div[@class="sc-cyRcrZ celkDu"]')[0].text
-            # print('Address=', address, ', Availability=', availability, ', Charging rate=', rate,', Power and connection type=', powerType, ', Price=', price)
+            print('Address=', address, ', Availability=', availability, ', Charging rate=', rate,', Power and connection type=', powerType, ', Price=', price)
             linesOfRate = rate.split("\n")
             chargingRate = linesOfRate[0]
             power = linesOfRate[1]
@@ -84,7 +96,7 @@ for i in range(x):
             backButton.click()
             time.sleep(1)
             driver.execute_script("arguments[0].scrollIntoView();", station)
-            # print('######################################################')
+            print('######################################################')
 
         time.sleep(10)
 
