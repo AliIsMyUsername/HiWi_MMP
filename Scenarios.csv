@@ -1,0 +1,13 @@
+Battery kWh,Destination km,Current soc,Time available mins,Description,Latitude,Longitude,Connection type
+24,1,20,20,Grocery,50.78769,6.06762,Type 2
+40,2,40,40,Haircut,50.76957,6.07473,Combo
+60,3,60,60,Doctor,50.76791,6.07672,CHAdeMO
+80,4,80,80,Shopping,50.77496,6.09394,MennekesCOMBO
+100,5,20,100,Gym,50.78746,6.06924,Schuko
+75,6,30,120,Sports event,50.79354,6.09836,Type 2
+30,2,25,15,Pharmacy,50.75192,6.15678,Type 2
+50,5,50,30,Friend's house,50.776873,6.09133,Type 2
+70,10,35,90,University class,50.75964,6.08315,Type 2
+85,15,65,45,Airport drop-off,50.87877,7.12099,Type 2
+90,20,15,120,Day trip to lake,50.85306,6.26657,Type 2
+100,8,80,240,Movie & dinner,50.77572,6.0856,Type 2
