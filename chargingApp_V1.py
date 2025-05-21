@@ -12,6 +12,9 @@ import random
 import numpy as np
 import tkinter as tk
 from geopandas.tools import geocode
+from math import radians, sin, cos, sqrt, atan2
+import webview
+
 
 
 root = tk.Tk()
@@ -165,8 +168,7 @@ def ladekarte():
             rate = driver.find_element(By.XPATH, '//div[@class="sc-elxqWl cUXcTO"]').text
             powerType = driver.find_element(By.XPATH, '//div[@class="sc-fPXMVe sc-APcvf gdLKmB fPhTpt"]').text
             price = driver.find_elements(By.XPATH, '//div[@class="sc-cyRcrZ celkDu"]')[0].text
-            print('Address=', address, ', Availability=', availability, ', Charging rate=', rate,
-                  ', Power and connection type=', powerType, ', Price=', price)
+            print('Address=', address, ', Availability=', availability, ', Charging rate=', rate, ', Power and connection type=', powerType, ', Price=', price)
             linesOfRate = rate.split("\n")
             chargingRate = linesOfRate[0]
             power = linesOfRate[1]
@@ -203,7 +205,29 @@ def optimiser_WSM():
 
     # file_path = r'E:/HiWi/SampleData.csv'
     outputLadekarteDf = ladekarte()
+    outputLadekarteDf['Distance KM'] = None
 
+    for i in range(len(outputLadekarteDf)):
+        print(outputLadekarteDf['Address'].loc[i])
+        try:
+            location = geocode(outputLadekarteDf['Address'].loc[i], provider='nominatim', user_agent='xyz', timeout=10)
+        except Exception as e:
+            print(f"{e}")
+            continue
+
+        if location is None or location.empty:
+            continue
+        point = location.geometry.iloc[0]
+        if point.is_empty:
+            print("Returned geometry is empty.")
+            continue
+        else:
+            lat1 = point.y
+            lon1 = point.x
+            print(lat1, lon1)
+            distance = haversine(lat, long, lat1, lon1)
+            print(distance)
+            outputLadekarteDf.at[i, 'Distance KM'] = distance
     # Availability scoring
     availability_map = {
         "Available": 3,
@@ -237,8 +261,46 @@ def optimiser_WSM():
     # Best station
     best = df_filtered.loc[df_filtered['total_score'].idxmax()]
     print("Best option:\n", best)
+    bestAddress= best['Address']   #still need to create a function to get the coordinates of the best address
+    try:
+        bestAddress = geocode(bestAddress, provider='nominatim', user_agent='xyz', timeout=10)
+    except Exception as e:
+        print(f"{e}")
+    if bestAddress is None or bestAddress.empty:
+        print('the Address is not valid')
+    else:
+        point = bestAddress.geometry.iloc[0]
+        if point.is_empty:
+            print('the Address is not valid')
+        else:
+            lat1 = point.y
+            lon1 = point.x
+            show_map(lat1, lon1)
+
     return best
 
+def show_map(lat, long):
+    url = f"https://www.google.com/maps?q={lat},{long}"
+    webview.create_window("Location of charging station", url)
+    webview.start()
+    
+def haversine(lat1, lon1, lat2, lon2):
+    # Earth radius in kilometers (use 3956 for miles)
+    R = 6371.0
+
+    # Convert degrees to radians
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+
+    # Differences
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    # Haversine formula
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    distance = R * c
+    return distance
 
 # # Convert the best row to a string
 # best_text = best.to_string()
