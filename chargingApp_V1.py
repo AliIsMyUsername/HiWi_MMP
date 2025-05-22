@@ -279,8 +279,9 @@ def optimiser_WSM():
 
     return best
 
-def show_map(lat, long):
-    url = f"https://www.google.com/maps?q={lat},{long}"
+def show_map(lat1, long1):
+    # url = f"https://www.google.com/maps?q={lat1},{long1}" # this url shows only the location of the charging station
+    url = f"https://www.google.com/maps/dir/{lat},{long}/{lat1},{long1}" # the url includes the starting and the end point and suggests a route between them
     webview.create_window("Location of charging station", url)
     webview.start()
     
