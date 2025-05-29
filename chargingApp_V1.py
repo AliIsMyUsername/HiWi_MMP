@@ -240,19 +240,23 @@ def optimiser_WSM():
     outputLadekarteDf['PowerKW'] = outputLadekarteDf['Power'].str.extract(r'([\d.]+)').astype(float)
     outputLadekarteDf['power_score'] = outputLadekarteDf['PowerKW'] / outputLadekarteDf['PowerKW'].max()
     outputLadekarteDf['price_score'] = 1 / outputLadekarteDf['Price'].str.extract(r'([\d.]+)').astype(float)
-
+    outputLadekarteDf['distance_score'] = 1 - (outputLadekarteDf['Distance KM'] / outputLadekarteDf['Distance KM'].max())
+    outputLadekarteDf['distance_score'] = pd.to_numeric(outputLadekarteDf['distance_score'],errors='coerce')  # to make cast the values into float instead of an object to avoid later errors
+    print(outputLadekarteDf['price_score'].dtype)
+    print(outputLadekarteDf['distance_score'].dtype)
     # Connection preference (user-defined)
     preferred_connection = conType
     outputLadekarteDf['connection_score'] = outputLadekarteDf['Connection type'].apply(
         lambda x: 1 if x == preferred_connection else 0.5)
 
-    # Weighted score (tune weights as needed)
-    w1, w2, w3, w4 = 3, 2, 2, 1
+    # Weighted score (tune weights as needed) should be ajusted in th future
+    w1, w2, w3, w4, w5 = 3, 2, 3, 1, 3
     outputLadekarteDf['total_score'] = (
             w1 * outputLadekarteDf['availability_score'] +
             w2 * outputLadekarteDf['power_score'] +
             w3 * outputLadekarteDf['price_score'] +
-            w4 * outputLadekarteDf['connection_score']
+            w4 * outputLadekarteDf['connection_score']+
+            w5 * outputLadekarteDf['distance_score']
     )
 
     # Filter out out-of-service
@@ -281,7 +285,8 @@ def optimiser_WSM():
 
 def show_map(lat1, long1):
     # url = f"https://www.google.com/maps?q={lat1},{long1}" # this url shows only the location of the charging station
-    url = f"https://www.google.com/maps/dir/{lat},{long}/{lat1},{long1}" # the url includes the starting and the end point and suggests a route between them
+    # url = f"https://www.google.com/maps/dir/{lat},{long}/{lat1},{long1}&travelmode=driving" # the url includes the starting and the end point and suggests a route between them
+    url = f"https://www.google.com/maps/dir/?api=1&origin={lat},{long}&destination={lat1},{long1}&travelmode=driving" #the url includes the starting and the end point and suggests a route between them for a car
     webview.create_window("Location of charging station", url)
     webview.start()
     
