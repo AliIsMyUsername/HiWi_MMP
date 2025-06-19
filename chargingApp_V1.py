@@ -14,6 +14,11 @@ import tkinter as tk
 from geopandas.tools import geocode
 from math import radians, sin, cos, sqrt, atan2
 import webview
+import webbrowser
+import herepy
+import requests
+
+
 
 
 
@@ -80,10 +85,13 @@ dropMenu_label.pack()
 def show_input():
     if lat is not None and long is not None and conType is not None:
         # print_location(lat, long, conType)
-        best=optimiser_WSM()
+        best,lat1,lon1=optimiser_WSM()
         # Convert the best row to a string
         best_text = best.to_string()
         result_label.config(text="Best option:\n" + best_text)
+        root.update_idletasks()
+        show_map(lat1, lon1)
+
 
     else:
         print("enter connection and address first")
@@ -225,7 +233,8 @@ def optimiser_WSM():
             lat1 = point.y
             lon1 = point.x
             print(lat1, lon1)
-            distance = haversine(lat, long, lat1, lon1)
+            # distance = haversine(lat, long, lat1, lon1)  #gets the direct distance between the two points regardless of any obstacles or traffic in between
+            distance = getDistance(lat, long, lat1, lon1)    #gets the direct distance between the two points while taking any obstacles or traffic in between into account
             print(distance)
             outputLadekarteDf.at[i, 'Distance KM'] = distance
     # Availability scoring
@@ -242,8 +251,8 @@ def optimiser_WSM():
     outputLadekarteDf['price_score'] = 1 / outputLadekarteDf['Price'].str.extract(r'([\d.]+)').astype(float)
     outputLadekarteDf['distance_score'] = 1 - (outputLadekarteDf['Distance KM'] / outputLadekarteDf['Distance KM'].max())
     outputLadekarteDf['distance_score'] = pd.to_numeric(outputLadekarteDf['distance_score'],errors='coerce')  # to make cast the values into float instead of an object to avoid later errors
-    print(outputLadekarteDf['price_score'].dtype)
-    print(outputLadekarteDf['distance_score'].dtype)
+    # print(outputLadekarteDf['price_score'].dtype)
+    # print(outputLadekarteDf['distance_score'].dtype)
     # Connection preference (user-defined)
     preferred_connection = conType
     outputLadekarteDf['connection_score'] = outputLadekarteDf['Connection type'].apply(
@@ -279,17 +288,17 @@ def optimiser_WSM():
         else:
             lat1 = point.y
             lon1 = point.x
-            show_map(lat1, lon1)
+            # show_map(lat1, lon1)
 
-    return best
+    return best,lat1,lon1
 
 def show_map(lat1, long1):
     # url = f"https://www.google.com/maps?q={lat1},{long1}" # this url shows only the location of the charging station
     # url = f"https://www.google.com/maps/dir/{lat},{long}/{lat1},{long1}&travelmode=driving" # the url includes the starting and the end point and suggests a route between them
     url = f"https://www.google.com/maps/dir/?api=1&origin={lat},{long}&destination={lat1},{long1}&travelmode=driving" #the url includes the starting and the end point and suggests a route between them for a car
-    webview.create_window("Location of charging station", url)
-    webview.start()
-    
+    # webview.create_window("Location of charging station", url)
+    # webview.start()
+    webbrowser.open(url)
 def haversine(lat1, lon1, lat2, lon2):
     # Earth radius in kilometers (use 3956 for miles)
     R = 6371.0
@@ -307,6 +316,27 @@ def haversine(lat1, lon1, lat2, lon2):
 
     distance = R * c
     return distance
+
+def getDistance(lat1, lon1, lat2, lon2):
+    api_key = '8AuRI3P4xcSIwv9CGWZ8B3XKA-qhopB-Q2w6igWy-Yo'  # api from here maps
+    url = "https://router.hereapi.com/v8/routes"
+
+    params = {
+        "transportMode": "car",
+        "origin": f"{lat1},{lon1}",
+        "destination": f"{lat2},{lon2}",
+        "return": "summary",
+        "routingMode": "fast", #fastest way between the tow points regardless of the distance
+        # "routingMode": "short", #shortest way between the tow points regardless of the traffic
+        "apikey": api_key
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+    summary = data["routes"][0]["sections"][0]["summary"]
+    distance = summary["length"] / 1000  # the acctual driving distance in km between the two coordinates
+    return distance
+
 
 # # Convert the best row to a string
 # best_text = best.to_string()
