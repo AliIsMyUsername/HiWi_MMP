@@ -318,7 +318,7 @@ def haversine(lat1, lon1, lat2, lon2):
     return distance
 
 def getDistance(lat1, lon1, lat2, lon2):
-    api_key = '8AuRI3P4xcSIwv9CGWZ8B3XKA-qhopB-Q2w6igWy-Yo'  # api from here maps
+    api_key = '0000'  # api from here maps
     url = "https://router.hereapi.com/v8/routes"
 
     params = {
