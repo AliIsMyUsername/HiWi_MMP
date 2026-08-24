@@ -8,19 +8,9 @@ import time
 import traceback
 import pandas as pd
 from selenium.webdriver.chrome.options import Options
-import random
-import numpy as np
-import tkinter as tk
 from geopandas.tools import geocode
-from math import radians, sin, cos, sqrt, atan2
-# import webview
-import webbrowser
-# import herepy
-import requests
 from datetime import datetime
-import RandomData3Console3
-import glob
-import os
+
 
 lat=None
 long=None
