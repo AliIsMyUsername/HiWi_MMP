@@ -137,56 +137,56 @@ try:
     print("\n" + "=" * 60)
     print(f"Starting run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
-    get_location("nizzaallee 2")
-    ladekarte()
+    # get_location("nizzaallee 2")
+    # ladekarte()
+    #
+    # get_location("Seilgraben 31")
+    # ladekarte()
+    #
+    # get_location("Aachen Bushof ")
+    # ladekarte()
+    #
+    # get_location("Jesuitenstraße 12, Aachen")
+    # ladekarte()
+    #
+    # get_location("Lagerhausstraße 20, Aachen")
+    # ladekarte()
+    #
+    # get_location("Kullenhofstr. 80, Aachen")
+    # ladekarte()
+    #
+    # get_location("55 Ahornstraße, Aachen")
+    # ladekarte()
+    #
+    # get_location("Am Gut Wolf 4, Aachen")
+    # ladekarte()
+    #
+    # get_location("Vaalser Str. 48")
+    # ladekarte()
+    #
+    # get_location("Sandkaulstraße 20, Aachen")
+    # ladekarte()
+    #
+    # get_location("Lagerhausstraße 20, Aachen")
+    # ladekarte()
+    #
+    # get_location("Kurbrunnenstraße 18, Aachen")
+    # ladekarte()
+    #
+    # get_location("Campus-Boulevard 53, Aachen")
+    # ladekarte()
+    #
+    # get_location("Wirichsbongardstraße  47, Aachen")
+    # ladekarte()
+    #
+    # get_location("Süsterfeldstraße 63, Aachen")
+    # ladekarte()
 
-    get_location("Seilgraben 31")
-    ladekarte()
-
-    get_location("Aachen Bushof ")
-    ladekarte()
-
-    get_location("Jesuitenstraße 12, Aachen")
-    ladekarte()
-
-    get_location("Lagerhausstraße 20, Aachen")
-    ladekarte()
-
-    get_location("Kullenhofstr. 80, Aachen")
-    ladekarte()
-
-    get_location("55 Ahornstraße, Aachen")
-    ladekarte()
-
-    get_location("Am Gut Wolf 4, Aachen")
-    ladekarte()
-
-    get_location("Vaalser Str. 48")
-    ladekarte()
-
-    get_location("Sandkaulstraße 20, Aachen")
-    ladekarte()
-
-    get_location("Lagerhausstraße 20, Aachen")
-    ladekarte()
-
-    get_location("Kurbrunnenstraße 18, Aachen")
-    ladekarte()
-
-    get_location("Campus-Boulevard 53, Aachen")
-    ladekarte()
-
-    get_location("Wirichsbongardstraße  47, Aachen")
-    ladekarte()
-
-    get_location("Süsterfeldstraße 63, Aachen")
-    ladekarte()
-
-    get_location("Haarener Gracht 6 8, Aachen")
+    get_location("Viktoriaallee 49, Aachen")
     ladekarte()
 
     print("\n" + "=" * 60)
-    print(f"Starting run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"End run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
 except Exception as e:
     print(f"Error in main loop: {e}")
