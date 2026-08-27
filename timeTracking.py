@@ -12,6 +12,10 @@ from geopandas.tools import geocode
 from datetime import datetime
 
 
+# notes for future tasks
+# still need to reduce the time for each run and include the function to mearge all the files and delete the previous ones
+
+
 lat=None
 long=None
 conType=None
@@ -41,8 +45,8 @@ driver = webdriver.Chrome(service=service)  # vasible
 
 
 
-def ladekarte():
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+def ladekarte(timestamp):
+
 
     columns = ["Address", "Availability","Timestamp" ]
     outputDF = pd.DataFrame(columns=columns)
@@ -121,81 +125,89 @@ def ladekarte():
         # Close the browser after the interaction
 
         time.sleep(5)
-        # timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        timestampOfTheName = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         # # outputDFBestResult.to_csv(f"output_{timestamp}.csv", index=False)
         # outputDF.to_csv(f"output_{timestamp}.csv", index=False)
         print(outputDF)
 
 
-    outputDF.to_csv(f"output_{timestamp}.csv", index=False)
+    outputDF.to_csv(f"output_{timestampOfTheName}.csv", index=False)
     outputDF.to_csv("output.csv", index=False)
     return outputDF
 
-get_location("nizzaallee 2")
-
 try:
-    print("\n" + "=" * 60)
-    print(f"Starting run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("=" * 60)
-    get_location("nizzaallee 2")
-    ladekarte()
+    while True:
 
-    get_location("Seilgraben 31")
-    ladekarte()
+        print("\n" + "=" * 60)
+        print(f"Starting run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("=" * 60)
 
-    get_location("Aachen Bushof ")
-    ladekarte()
+        timestampOfTheRun = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-    get_location("Jesuitenstraße 12, Aachen")
-    ladekarte()
+        try:
+            get_location("nizzaallee 2")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Lagerhausstraße 20, Aachen")
-    ladekarte()
+            get_location("Seilgraben 31")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Kullenhofstr. 80, Aachen")
-    ladekarte()
+            get_location("Aachen Bushof")
+            ladekarte(timestampOfTheRun)
 
-    get_location("55 Ahornstraße, Aachen")
-    ladekarte()
+            get_location("Jesuitenstraße 12, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Am Gut Wolf 4, Aachen")
-    ladekarte()
+            get_location("Lagerhausstraße 20, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Vaalser Str. 48")
-    ladekarte()
+            get_location("Kullenhofstr. 80, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Sandkaulstraße 20, Aachen")
-    ladekarte()
+            get_location("55 Ahornstraße, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Lagerhausstraße 20, Aachen")
-    ladekarte()
+            get_location("Am Gut Wolf 4, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Kurbrunnenstraße 18, Aachen")
-    ladekarte()
+            get_location("Vaalser Str. 48")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Campus-Boulevard 53, Aachen")
-    ladekarte()
+            get_location("Sandkaulstraße 20, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Wirichsbongardstraße  47, Aachen")
-    ladekarte()
+            get_location("Lagerhausstraße 20, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Süsterfeldstraße 63, Aachen")
-    ladekarte()
+            get_location("Kurbrunnenstraße 18, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    get_location("Viktoriaallee 49, Aachen")
-    ladekarte()
+            get_location("Campus-Boulevard 53, Aachen")
+            ladekarte(timestampOfTheRun)
 
-    print("\n" + "=" * 60)
-    print(f"End run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("=" * 60)
-except Exception as e:
-    print(f"Error in main loop: {e}")
-    traceback.print_exc()
+            get_location("Wirichsbongardstraße 47, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Süsterfeldstraße 63, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Viktoriaallee 49, Aachen")
+            ladekarte(timestampOfTheRun)
+
+        except Exception as e:
+            print(f"Error during this run: {e}")
+            traceback.print_exc()
+
+        print("\n" + "=" * 60)
+        print(f"End run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print("=" * 60)
+
+
+except KeyboardInterrupt:
+    print("\nProgram stopped by user.")
 
 finally:
     driver.quit()
-
-
+    print("Driver closed.")
 # while True:
 #     try:
 #         print("\n" + "=" * 60)
