@@ -114,7 +114,7 @@ def ladekarte(timestamp):
             driver.execute_script("arguments[0].scrollIntoView();", station)
             print('######################################################')
 
-        time.sleep(10)
+        time.sleep(3)
 
 
     except Exception as e:
@@ -124,7 +124,7 @@ def ladekarte(timestamp):
     finally:
         # Close the browser after the interaction
 
-        time.sleep(5)
+        time.sleep(2)
         timestampOfTheName = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         # # outputDFBestResult.to_csv(f"output_{timestamp}.csv", index=False)
         # outputDF.to_csv(f"output_{timestamp}.csv", index=False)
@@ -137,7 +137,7 @@ def ladekarte(timestamp):
 
 try:
     while True:
-
+        run_start = time.monotonic()
         print("\n" + "=" * 60)
         print(f"Starting run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
@@ -175,9 +175,6 @@ try:
             get_location("Sandkaulstraße 20, Aachen")
             ladekarte(timestampOfTheRun)
 
-            get_location("Lagerhausstraße 20, Aachen")
-            ladekarte(timestampOfTheRun)
-
             get_location("Kurbrunnenstraße 18, Aachen")
             ladekarte(timestampOfTheRun)
 
@@ -193,13 +190,98 @@ try:
             get_location("Viktoriaallee 49, Aachen")
             ladekarte(timestampOfTheRun)
 
+            get_location("Vaalser Straße 460, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Vaalser Straße 410, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Hans-Böckler-Allee 62, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Kullenhofstraße. 80, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Kullenhofstr. 0, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Forckenbeckstraße 61, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Judengasse 7, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Monheimsallee 44, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Pontwall 14, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("mauerstraße 1a aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Marienplatz 17, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Henricistraße 68, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Hirschgraben 35, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Krefelder Str. 155, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Hubert-Wienen-Straße 24, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Kackertstraße 2, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Annastraße 64, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Süsterfeldstraße 200, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Wirichsbongardstraße 53, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Turmstraße 1, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Couvenstraße 6, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Krefelder Str. 205, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Lombardenstraße 24, Aachen")
+            ladekarte(timestampOfTheRun)
+
+            get_location("Krefelder Str. 199, Aachen")
+            ladekarte(timestampOfTheRun)
+
+
+
         except Exception as e:
             print(f"Error during this run: {e}")
             traceback.print_exc()
-
+        run_duration = time.monotonic() - run_start
         print("\n" + "=" * 60)
         print(f"End run at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 60)
+
+        interval = 15 * 60  # 15 minutes in seconds
+
+        remaining = interval - run_duration
+
+        if remaining > 0:
+            print(f"Waiting {remaining / 60:.2f} minutes ")
+            time.sleep(remaining)
+        else:
+            print("Run took longer than 15 minutes.")
+
 
 
 except KeyboardInterrupt:
