@@ -95,7 +95,7 @@ EARTH_KM_PER_DEG_LON_EQ = 111.320
 # ---------------------------------------------------------------------------
 # Overpass helpers
 # ---------------------------------------------------------------------------
-def overpass(query, use_cache=True, retries=3):
+def overpass(query, use_cache=True, retries=5):
     """Run an Overpass query and cache the JSON answer on disk."""
     os.makedirs(CACHE_DIR, exist_ok=True)
     key = hashlib.sha1(query.encode('utf-8')).hexdigest()
@@ -118,7 +118,7 @@ def overpass(query, use_cache=True, retries=3):
             except Exception as e:  # rate limit / timeout -> try next server, then wait
                 last_error = e
                 print(f'\tOverpass request failed at {url}: {e}')
-        time.sleep(10 * (attempt + 1))
+        time.sleep(20 * (attempt + 1))
     raise RuntimeError(f'Overpass query failed: {last_error}')
 
 
